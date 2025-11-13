@@ -40,7 +40,9 @@
     <extensions defaultExtensionNs="com.intellij">
         <completion.contributor language="JAVA"
                                 implementationClass="plus.jdk.intellij.renamify.ChineseToEnglishCompletionContributor"/>
-
+        <!-- 使用 applicationConfigurable 替代 projectConfigurable -->
+        <applicationConfigurable instance="plus.jdk.intellij.renamify.settings.OpenAiSettingsConfigurable"/>
+        <applicationService serviceImplementation="plus.jdk.intellij.renamify.settings.OpenAiSettings"/>
     </extensions>
 
 
