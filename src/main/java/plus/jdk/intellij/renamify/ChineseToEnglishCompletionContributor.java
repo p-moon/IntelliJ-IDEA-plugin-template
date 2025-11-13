@@ -2,14 +2,29 @@ package plus.jdk.intellij.renamify;
 
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.project.Project;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.util.ProcessingContext;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.jetbrains.annotations.NotNull;
 
 public class ChineseToEnglishCompletionContributor extends CompletionContributor {
 
+    /**
+     * 用于存储和管理与OpenAI的聊天模型实例的交互
+     */
+    private final OpenAiChatModel openAiChatModel;
+
     public ChineseToEnglishCompletionContributor() {
+        openAiChatModel = OpenAiChatModel.builder()
+//                .apiKey("8939f2ddc2f941fda81b6c4c5b18f2de.39bDB9kr0mxiuE9T")
+                .baseUrl("http://127.0.0.1:1234/v1")
+//                .temperature(0.7)
+//                .maxTokens(2048)
+                .modelName("qwen/qwen3-vl-4b")
+                .build();
+
         // 优化：Pattern 直接匹配 PsiIdentifier，触发更自然
         extend(CompletionType.BASIC,
                 PlatformPatterns.psiElement(PsiIdentifier.class),
@@ -25,18 +40,22 @@ public class ChineseToEnglishCompletionContributor extends CompletionContributor
                         System.out.println("[ChineseToEnglishCompletion] PsiElement text: " + text);
 
                         if (isChinese(text)) {
-                            // 可生成多种风格
+                            String prompt = String.format("""
+                                    我现在有一个中文变量名：%s，请帮我翻译成英文变量名，并使用小驼峰命名法。
+                                    尽可能的简洁形象一些，给出 4 个备选项，将输出结果使用英文逗号分隔返回给我
+                            """, text);
+                            String result = openAiChatModel.chat(prompt);
                             String camel = PinyinUtil.toCamelCase(text);
 
                             resultSet.addElement(
                                 LookupElementBuilder.create(camel)
                                     .withPresentableText(camel)
                                     .withLookupString(text)
-                                    .withTypeText("变量名(小驼峰)")
+                                    .withTypeText("通过 AI 生成变量名")
                                     .withInsertHandler((insertionContext, item) -> {
                                         int startOffset = insertionContext.getStartOffset();
                                         int tailOffset = insertionContext.getTailOffset();
-                                        insertionContext.getDocument().replaceString(startOffset, tailOffset, camel);
+                                        insertionContext.getDocument().replaceString(startOffset, tailOffset, result);
                                     })
                             );
                         }
