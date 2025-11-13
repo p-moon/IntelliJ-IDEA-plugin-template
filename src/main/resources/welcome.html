@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Call Graph ++</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            max-width: 100%;
+            background-color: #2B2B2B;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            margin: auto;
+            padding: 20px;
+            background-color: #2B2B2B;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #e5daaf; /* 更柔和的棕色 */
+            text-align: center;
+            margin-bottom: 0.5em;
+        }
+        h2 {
+            color: #7E57C2; /* 更鲜艳的紫色 */
+            margin-top: 1em;
+        }
+        p {
+            color: #D32F2F; /* 更深的红色 */
+            line-height: 1.5;
+        }
+        img {
+            width: 100%;
+            height: auto; /* 保持图片的原始宽高比 */
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+</head>
+<body>
+<div id="app">
+    <h1>欢迎使用 Call Graph ++</h1>
+    <h2>配置使用 MCP Server：</h2>
+    <pre><code class="language-json">
+{
+  "mcpServers": {
+    "code-analysis": {
+      "autoApprove": [
+        "method-json-call-stack",
+        "method-svg-call-stack"
+      ],
+      "disabled": false,
+      "timeout": 10000,
+      "url": "http://127.0.0.1:${PORT}/sse",
+      "transportType": "sse"
+    }
+  }
+}
+    </code></pre>
+    <h2>分析某一个函数的调用行为：</h2>
+    <p>该插件会根据 AST 的代码树自动查找接口实现来分析业务逻辑。</p>
+    <p>数据库相关的查询和写入操作会被高亮出来。如果你想要批量分析，可以选中某个文件或文件夹，将会分析所有选中内容下的所有的函数的调用行为</p>
+
+    <img src="https://s3.cn-north-1.jdcloud-oss.com/shendengbucket1/2024-12-22-15-39gGGiB0mfRro925t12.png" alt="分析图"/>
+
+    <h2>调整时序图要分析的内容：</h2>
+    <p>注意，这里的 call depth 是代码逻辑分析的最大深度，如果你要分析所有非本项目的内容，例如 jdk 底层库的调用，这个别调的太大。</p>
+    <img src="https://s3.cn-north-1.jdcloud-oss.com/shendengbucket1/2024-12-22-16-03DYWtYLn12GlVfcSu.png" alt="时序图"/>
+
+    <h2>如果想高亮某些内容可以在这里配置：</h2>
+    <img src="https://s3.cn-north-1.jdcloud-oss.com/shendengbucket1/2024-12-22-16-11uJsTQUPbmEtxjTe.png" alt="高亮配置"/>
+
+    <p>如果你发现了什么 bug，或者想加入更好的功能，欢迎入群交流，京 me 群：10213392691</p>
+</div>
+</body>
+<!-- 2. 引入 Prism.js 的核心 JS 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<!-- 3. 引入你需要的语言支持文件 -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</html>
