@@ -15,16 +15,24 @@ public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.S
     @Data
     public static class State {
         public String baseUrl = "http://127.0.0.1:11434/v1";
-        public String modelName = "qwen3:4b";
+        public String modelName = "qwen3:1.7b";
         public double temperature = 0.7;
         public int maxTokens = 100;
         public String apiKey = "";
-        private String prompt = """
-                                    我现在有一个中文变量名：“%s”：
-                                    请帮我翻译成英文变量名，并使用小驼峰命名法。
-                                    尽可能的简洁形象一些，
-                                    给出 4 个备选项，将输出结果使用英文逗号分隔返回给我,
-                            """;
+        private String prompt =
+                """
+给定一个中文变量名“%s”，请为我生成对应的变量名，要求如下：
+
+先理解变量语义，抓住核心含义，而不是逐字直译。
+
+翻译成英文变量名，使用 lowerCamelCase（首字母小写，其余单词首字母大写），不要包含特殊字符。
+
+命名尽量简洁、优雅、有高级感。
+
+给出 4 个备选项，使用英文逗号分隔。
+
+只输出变量名，不要解释。
+""";
     }
 
     private State state = new State();

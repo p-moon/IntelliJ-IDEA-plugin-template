@@ -70,7 +70,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             panel.add(createLabel("API Key:", labelFont), gbc);
             gbc.gridx = 1;
             gbc.weightx = 0.7;
-            panel.add(apiKeyField, gbc);
+//            panel.add(apiKeyField, gbc);
 
             row++;
             gbc.gridx = 0; gbc.gridy = row;
@@ -78,7 +78,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             panel.add(createLabel("Temperature:", labelFont), gbc);
             gbc.gridx = 1;
             gbc.weightx = 0.7;
-            panel.add(temperatureField, gbc);
+//            panel.add(temperatureField, gbc);
 
             row++;
             gbc.gridx = 0; gbc.gridy = row;
@@ -86,7 +86,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             panel.add(createLabel("最大 token 数量:", labelFont), gbc);
             gbc.gridx = 1;
             gbc.weightx = 0.7;
-            panel.add(maxTokensField, gbc);
+//            panel.add(maxTokensField, gbc);
 
             row++;
             gbc.gridx = 0; gbc.gridy = row;
@@ -188,7 +188,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
         try {
             state.maxTokens = Integer.parseInt(maxTokensField.getText());
         } catch (NumberFormatException e) {
-            state.maxTokens = 2048;
+            state.maxTokens = 200;
         }
         state.setPrompt(promptField.getText());
         // 强制保存设置，确保输入配置落盘
