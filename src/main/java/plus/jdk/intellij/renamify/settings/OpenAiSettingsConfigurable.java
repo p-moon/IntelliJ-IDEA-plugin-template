@@ -188,7 +188,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
         try {
             state.maxTokens = Integer.parseInt(maxTokensField.getText());
         } catch (NumberFormatException e) {
-            state.maxTokens = 2048;
+            state.maxTokens = 200;
         }
         state.setPrompt(promptField.getText());
         // 强制保存设置，确保输入配置落盘

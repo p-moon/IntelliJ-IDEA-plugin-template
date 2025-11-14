@@ -15,16 +15,20 @@ public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.S
     @Data
     public static class State {
         public String baseUrl = "http://127.0.0.1:11434/v1";
-        public String modelName = "qwen3:4b";
+        public String modelName = "qwen3:0.6b";
         public double temperature = 0.7;
         public int maxTokens = 100;
         public String apiKey = "";
-        private String prompt = """
-                                    我现在有一个中文变量名：“%s”：
-                                    请帮我翻译成英文变量名，并使用小驼峰命名法。
-                                    尽可能的简洁形象一些，
-                                    给出 4 个备选项，将输出结果使用英文逗号分隔返回给我,
-                            """;
+        private String prompt =
+                """
+                        I have a Chinese variable name: "%s". \s
+                        Please translate it into an English variable name using lowerCamelCase, like userName、userAge.
+                        
+                        Requirements:
+                        1. No poetic, figurative, or imaginative translation.
+                        2. Provide 4 alternative variable names.
+                        3. Return them in one line, separated by ",".
+                        """;
     }
 
     private State state = new State();

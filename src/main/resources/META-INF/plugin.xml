@@ -39,7 +39,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <completion.contributor language="JAVA"
-                                implementationClass="plus.jdk.intellij.renamify.ChineseToEnglishCompletionContributor"/>
+                                implementationClass="plus.jdk.intellij.renamify.AiIntelligentVarCompletionContributor"/>
         <!-- 使用 applicationConfigurable 替代 projectConfigurable -->
         <applicationConfigurable instance="plus.jdk.intellij.renamify.settings.OpenAiSettingsConfigurable"/>
         <applicationService serviceImplementation="plus.jdk.intellij.renamify.settings.OpenAiSettings"/>
