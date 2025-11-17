@@ -1,83 +1,43 @@
-```plantuml
-@startuml
-!theme superhero
-skinparam backgroundColor #434343
-left to right direction
-skinparam packageStyle rectangle
-actor User
-actor Sales
-rectangle order {
-  User --> (checkout)
-  (checkout) .> (payment) : include
-  (order) .> (checkout) : extends (checkout)
-  (order) <-- Sales
-}
-note "Requires login" as N2
-  (checkout) .. N2
-  N2 .. (payment)
-  
-rectangle trade {
-   (payment2) -> (payment3) : include
-   (payment) .> (payment) : extends (payment)
-   (payment3) ...> (payment): ssssssss
-}
-@enduml
-```
+# Renamify 插件原理与流程说明
+
+## 一、项目简介
+Renamify 是一个基于大模型（如 GPT-4）实现的智能变量名自动补全插件。
+其主要功能是在用户输入中文变量名时，自动调用大模型，将其动态转换为语义合理的英文变量名并进行补全，提升代码国际化和可读性。
+
+## 二、核心原理
+
+1. **输入检测**：插件监听用户在 IDE 中输入变量名的行为，识别出中文变量名。
+2. **大模型交互**：检测到中文输入后，插件通过网络接口（如 OpenAI API）与大模型进行交互，请求将中文变量名翻译为有意义且符合编程规范的英文变量名。
+3. **结果处理与补全**：大模型返回英文变量名后，插件自动将其作为补全建议插入到代码编辑器中，实现无缝替换与补全。
+4. **用户体验优化**：支持多种命名风格（如 camelCase、snake_case），确保生成的变量名与项目规范保持一致。
+
+## 三、主要流程
+
+- 用户在 IDE 输入中文变量名
+- 插件检测到中文输入，触发补全流程
+- 构造请求并发送至大模型 API
+- 大模型返回英文变量名建议
+- 插件将英文变量名补全到代码编辑器
+- 用户选择并确认补全结果
+
+## 四、流程图说明
+
+下方为 Renamify 插件整体流程的 PlantUML 活动图
 
 ```plantuml
 @startuml
-!theme superhero
-skinparam backgroundColor #434343
-|#lightblue|Customer|
+title Renamify 智能变量名补全流程
+
 start
-:Find Barista;
-|#antiquewhite|Barista|
-:Greet Customer;
-|Customer|
-:Request latte;
-|Barista|
-:Write details on cup;
-|Customer|
-:Buy latte;
-|Barista|
-if (Payment Accepted?) then (yes)
-#lightgreen:Make latte;
-else (no)
-#pink:Apologise;
-endif
-|Customer|
-:Drink latte;
-note right
-  //Feel perky//
-end note
+:用户在 IDE 输入中文变量名;
+:插件检测到中文，触发补全流程;
+:调用大模型 API 请求英文变量名;
+:获取英文变量名建议;
+:自动补全插入英文变量名到代码;
+:用户确认补全结果;
 stop
+
 @enduml
 ```
 
-```plantuml
-@startuml
-!theme cerulean-outline
-skinparam backgroundColor #434343
-@startmindmap
-+ UML diagrams
-++ Behaviour diagrams
-+++ Activity diagrams
-+++ Use case diagrams
-+++ State machine diagrams
-+++ Interaction diagrams
-++++_ Sequence diagrams
-++++_ Communication diagrams
-++++_ Interaction overview diagrams
-++++_ Timing diagrams
--- Structure diagrams
---- Class diagrams
---- Package diagrams
---- Object diagrams
---- Composite structure diagrams
---- Component diagrams
---- Profile diagrams
---- Deployment diagrams
-@endmindmap
-@enduml
-
-```
+如需进一步了解插件实现细节，请参考上述核心代码文件。

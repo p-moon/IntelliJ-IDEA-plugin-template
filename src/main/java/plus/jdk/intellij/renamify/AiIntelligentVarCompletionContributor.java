@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import plus.jdk.intellij.renamify.settings.OpenAiSettings;
 
 import java.time.Duration;
+import java.util.HashMap;
 
 @Slf4j
 public class AiIntelligentVarCompletionContributor extends CompletionContributor {
@@ -51,7 +52,10 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                             ChatRequest chatRequest = ChatRequest.builder()
                                     .parameters(
                                              new OpenAiChatRequestParameters.Builder()
-//                                                    .reasoningEffort("low")
+                                                     .reasoningEffort("none")
+                                                     .customParameters(new HashMap<>(){{
+                                                         put("enable_thinking", false);
+                                                     }})
                                                     .responseFormat(ResponseFormat.TEXT)
                                                     .build())
                                     .messages(UserMessage.from(prompt)).build();
@@ -62,7 +66,7 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                                 String result = chatResponse.aiMessage().text();
                                 log.info("获取到了AI 的返回结果，results: {}", chatResponse);
                                 for (String res : result.split(",")) {
-                                    String trimmed = res.trim();
+                                    String trimmed = fixResult(res.trim());
                                     try {
                                         resultSet.addElement(
                                                 LookupElementBuilder.create(trimmed)
@@ -85,6 +89,35 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                         }
                     }
                 });
+    }
+
+    /**
+     * 按照“-”或空格分割字符串，并将各部分首字母大写拼接。
+     * 例如：abc-def -> AbcDef，abc def -> AbcDef
+     */
+    public static String fixResult(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        String[] parts;
+        if (input.contains("-")) {
+            parts = input.split("-");
+        } else if(input.contains("_")) {
+            parts = input.split("_");
+        }else {
+            parts = input.split("\\s+");
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String part : parts) {
+            if (part.isEmpty()) continue;
+            if (part.length() == 1) {
+                sb.append(part.toUpperCase());
+            } else {
+                sb.append(Character.toUpperCase(part.charAt(0)))
+                        .append(part.substring(1).toLowerCase());
+            }
+        }
+        return sb.toString();
     }
 
 
