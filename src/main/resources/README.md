@@ -26,16 +26,40 @@ Renamify 是一个基于大模型（如 GPT-4）实现的智能变量名自动�
 
 ```plantuml
 @startuml
-title Renamify 智能变量名补全流程
 
-start
-:用户在 IDE 输入中文变量名;
-:插件检测到中文，触发补全流程;
-:调用大模型 API 请求英文变量名;
-:获取英文变量名建议;
-:自动补全插入英文变量名到代码;
-:用户确认补全结果;
-stop
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+skinparam sequence {
+    ArrowColor DeepSkyBlue
+    ActorBorderColor DeepSkyBlue
+    LifeLineBorderColor blue
+    LifeLineBackgroundColor #A9DCDF
+    ParticipantBorderColor DeepSkyBlue
+    ParticipantBackgroundColor DodgerBlue
+    ParticipantFontName Impact
+    ParticipantFontSize 17
+    ParticipantFontColor #A9DCDF
+    ActorBackgroundColor aqua
+    ActorFontColor DeepSkyBlue
+    ActorFontSize 17
+    ActorFontName Aapex
+    LifeLineBackgroundColor #434343
+}
+!theme vibrant
+
+title Renamify 智能变量名补全时序图
+
+actor User
+participant "renamify(IDE插件)"
+participant "LLM大模型"
+
+User -> "renamify(IDE插件)" : 输入中文变量名
+"renamify(IDE插件)" -> "renamify(IDE插件)" : 检测到中文，触发补全流程
+"renamify(IDE插件)" -> "LLM大模型" : 请求英文变量名
+"LLM大模型" --> "renamify(IDE插件)" : 返回英文变量名建议
+"renamify(IDE插件)" -> "renamify(IDE插件)" : 插入英文变量名到代码
+"renamify(IDE插件)" -> User : 展示补全建议
+User -> "renamify(IDE插件)" : 用户确认或调整补全结果
 
 @enduml
 ```
