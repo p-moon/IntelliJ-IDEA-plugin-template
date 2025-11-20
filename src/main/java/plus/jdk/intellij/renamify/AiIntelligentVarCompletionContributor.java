@@ -72,7 +72,7 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                                                 LookupElementBuilder.create(trimmed)
                                                         .withPresentableText(trimmed)
                                                         .withLookupString(text)
-                                                        .withTypeText("通过 AI 生成变量名")
+                                                        .withTypeText("renamify")
                                                         .withInsertHandler((insertionContext, item) -> {
                                                             int startOffset = insertionContext.getStartOffset();
                                                             int tailOffset = insertionContext.getTailOffset();
