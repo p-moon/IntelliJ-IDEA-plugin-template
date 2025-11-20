@@ -121,7 +121,7 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
         if(result.length() == 1) {
             return result;
         }
-        return Character.toUpperCase(result.charAt(0)) + result.substring(1);
+        return Character.toLowerCase(result.charAt(0)) + result.substring(1);
     }
 
 
