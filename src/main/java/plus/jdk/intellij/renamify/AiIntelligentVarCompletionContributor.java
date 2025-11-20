@@ -117,7 +117,11 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                         .append(part.substring(1).toLowerCase());
             }
         }
-        return sb.toString();
+        String result = sb.toString();
+        if(result.length() == 1) {
+            return result;
+        }
+        return Character.toUpperCase(result.charAt(0)) + result.substring(1);
     }
 
 
