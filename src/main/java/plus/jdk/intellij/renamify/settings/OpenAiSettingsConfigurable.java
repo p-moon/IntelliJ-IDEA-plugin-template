@@ -100,6 +100,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             gbc.anchor = GridBagConstraints.CENTER;
             // 改为无滚动条、紧凑边框的多行输入框
             promptField.setPreferredSize(new Dimension(0, 36));
+            panel.add(promptField, gbc);
 
             row++;
             gbc.gridx = 0; gbc.gridy = row;
@@ -111,7 +112,16 @@ public class OpenAiSettingsConfigurable implements Configurable {
             gbc.anchor = GridBagConstraints.CENTER;
             outputJexlScriptField.setPreferredSize(new Dimension(0, 36));
             panel.add(outputJexlScriptField, gbc);
-            panel.add(promptField, gbc);
+
+            // JEXL变量说明
+            row++;
+            gbc.gridx = 1; gbc.gridy = row;
+            gbc.weightx = 0.7;
+            gbc.anchor = GridBagConstraints.WEST;
+            JLabel jexlTip = new JLabel("可用变量：completion（逗号切分后的结果）");
+            jexlTip.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            jexlTip.setForeground(new Color(180,180,180));
+            panel.add(jexlTip, gbc);
 
             loadSettings();
         }
