@@ -49,7 +49,8 @@ public class OpenAiSettingsConfigurable implements Configurable {
             promptField = createStyledArea(fieldFont);
 
             int row = 0;
-            gbc.gridx = 0; gbc.gridy = row;
+            gbc.gridx = 0;
+            gbc.gridy = row;
             gbc.weightx = 0.3;
             panel.add(createLabel("Base URL:", labelFont), gbc);
             gbc.gridx = 1;
@@ -57,7 +58,8 @@ public class OpenAiSettingsConfigurable implements Configurable {
             panel.add(baseUrlField, gbc);
 
             row++;
-            gbc.gridx = 0; gbc.gridy = row;
+            gbc.gridx = 0;
+            gbc.gridy = row;
             gbc.weightx = 0.3;
             panel.add(createLabel("模型名称:", labelFont), gbc);
             gbc.gridx = 1;
@@ -65,7 +67,8 @@ public class OpenAiSettingsConfigurable implements Configurable {
             panel.add(modelNameField, gbc);
 
             row++;
-            gbc.gridx = 0; gbc.gridy = row;
+            gbc.gridx = 0;
+            gbc.gridy = row;
             gbc.weightx = 0.3;
             panel.add(createLabel("API Key:", labelFont), gbc);
             gbc.gridx = 1;
@@ -73,7 +76,8 @@ public class OpenAiSettingsConfigurable implements Configurable {
             panel.add(apiKeyField, gbc);
 
             row++;
-            gbc.gridx = 0; gbc.gridy = row;
+            gbc.gridx = 0;
+            gbc.gridy = row;
             gbc.weightx = 0.3;
             panel.add(createLabel("Temperature:", labelFont), gbc);
             gbc.gridx = 1;
@@ -81,24 +85,34 @@ public class OpenAiSettingsConfigurable implements Configurable {
             panel.add(temperatureField, gbc);
 
             row++;
-            gbc.gridx = 0; gbc.gridy = row;
+            gbc.gridx = 0;
+            gbc.gridy = row;
             gbc.weightx = 0.3;
             panel.add(createLabel("最大 token 数量:", labelFont), gbc);
             gbc.gridx = 1;
             gbc.weightx = 0.7;
             panel.add(maxTokensField, gbc);
-
             row++;
-            gbc.gridx = 0; gbc.gridy = row;
+            gbc.gridx = 0;
+            gbc.gridy = row;
             gbc.weightx = 0.3;
+            gbc.weighty = 0;
             gbc.anchor = GridBagConstraints.NORTHEAST;
             panel.add(createLabel("提示词:", labelFont), gbc);
+
             gbc.gridx = 1;
             gbc.weightx = 0.7;
+            gbc.weighty = 1.0;
+            gbc.fill = GridBagConstraints.BOTH;
             gbc.anchor = GridBagConstraints.CENTER;
-            // 改为无滚动条、紧凑边框的多行输入框
-            promptField.setPreferredSize(new Dimension(0, 36));
-            panel.add(promptField, gbc);
+
+            JScrollPane promptScrollPane = new JScrollPane(promptField,
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            promptScrollPane.setPreferredSize(new Dimension(0, 120));
+            promptScrollPane.setBorder(promptField.getBorder());
+            promptField.setBorder(null);
+            panel.add(promptScrollPane, gbc);
 
 
             loadSettings();
@@ -109,7 +123,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
     private JLabel createLabel(String text, Font font) {
         JLabel label = new JLabel(text);
         label.setFont(font);
-        label.setForeground(new Color(220,220,220));
+        label.setForeground(new Color(220, 220, 220));
         label.setHorizontalAlignment(SwingConstants.RIGHT);
         return label;
     }
@@ -119,7 +133,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
         field.setFont(font);
         field.setBackground(new Color(40, 41, 44));
         field.setForeground(new Color(230, 230, 230));
-        field.setCaretColor(new Color(255,255,255));
+        field.setCaretColor(new Color(255, 255, 255));
         field.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(new Color(100, 100, 100), 1, true),
                 new EmptyBorder(8, 12, 8, 12)
@@ -133,7 +147,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
         area.setFont(font);
         area.setBackground(new Color(40, 41, 44));
         area.setForeground(new Color(230, 230, 230));
-        area.setCaretColor(new Color(255,255,255));
+        area.setCaretColor(new Color(255, 255, 255));
         area.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(new Color(100, 100, 100), 1, true),
                 new EmptyBorder(8, 12, 8, 12)
