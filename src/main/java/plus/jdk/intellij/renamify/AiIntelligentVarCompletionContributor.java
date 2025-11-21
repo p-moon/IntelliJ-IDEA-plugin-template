@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import com.intellij.openapi.util.IconLoader;
 
+import com.intellij.icons.AllIcons;
+
 @Slf4j
 public class AiIntelligentVarCompletionContributor extends CompletionContributor {
 
@@ -84,6 +86,7 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                                                 LookupElementBuilder.create(finalProcessed)
                                                         .withPresentableText(finalProcessed)
                                                         .withIcon(IconLoader.getIcon("/pluginIcon.svg", AiIntelligentVarCompletionContributor.class))
+                                                        .withIcon(AllIcons.Actions.EnableNewUi)
                                                         .withLookupString(text)
                                                         .withTypeText(String.format("Renamify:%s", variableResult.getReason()))
                                                         .withInsertHandler((insertionContext, item) -> {
