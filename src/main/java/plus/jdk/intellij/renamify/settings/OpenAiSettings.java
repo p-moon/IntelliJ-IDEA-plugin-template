@@ -20,8 +20,8 @@ public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.S
         public int maxTokens = 100;
         public String apiKey = "";
         private String prompt =
-                """
-给定一个中文变量名“%s”，请为我生成对应的变量名，要求如下：
+"""
+给定一个中文变量名“%s”，请为我生成对应的变量名以及中文变量说明，要求如下：
 
 先理解变量语义，抓住核心含义，而不是逐字直译。
 
@@ -29,16 +29,12 @@ public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.S
 
 命名尽量简洁、优雅、有高级感。
 
-给出 4 个备选项，使用英文逗号分隔。
+给出 4 个备选项，使用 JSON 数组格式，每个备选项包含变量名和推荐理由，例如：
 
-只输出变量名，不要解释。
+[{"variable": "userName", "reason": "用户名"}, {"variable": "userAge", "reason": "用户年龄"}]
+
+注意，仅输出 JSON 数组，不要包含其他内容。
 """;
-        /**
-         * 用于对AI输出结果做二次处理的JEXL脚本
-         * 例如：return res.trim();
-         * 可访问变量：res（AI原始输出）
-         */
-        private String outputJexlScript = "completion.trim()";
     }
 
     private State state = new State();

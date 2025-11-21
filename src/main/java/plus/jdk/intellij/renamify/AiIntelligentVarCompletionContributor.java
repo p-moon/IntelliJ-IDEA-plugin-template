@@ -21,10 +21,13 @@ import org.apache.commons.jexl3.JexlEngine;
 import org.apache.commons.jexl3.JexlExpression;
 import org.apache.commons.jexl3.MapContext;
 import org.jetbrains.annotations.NotNull;
+import plus.jdk.intellij.renamify.model.VariableResult;
 import plus.jdk.intellij.renamify.settings.OpenAiSettings;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
+import com.intellij.openapi.util.IconLoader;
 
 @Slf4j
 public class AiIntelligentVarCompletionContributor extends CompletionContributor {
@@ -41,6 +44,7 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
         ChatModel chatModel = OpenAiChatModel.builder()
                 .baseUrl(aiConfig.getBaseUrl())
                 .modelName(aiConfig.modelName)
+                .responseFormat(ResponseFormat.JSON)
                 .timeout(Duration.ofSeconds(10))
                 .build();
 
@@ -72,36 +76,24 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                                 ChatResponse chatResponse = chatModel.chat(chatRequest);
                                 String result = chatResponse.aiMessage().text();
                                 log.info("获取到了AI 的返回结果，results: {}", chatResponse);
-                                String outputJexlScript = aiConfig.getOutputJexlScript();
-                                for (String completion : result.split(",")) {
-                                    String processed = null;
-                                    if (outputJexlScript != null && !outputJexlScript.trim().isEmpty()) {
-                                        try {
-                                            JexlExpression expr = jexl.createExpression(outputJexlScript);
-                                            MapContext ctx = new MapContext();
-                                            ctx.set("completion", completion);
-                                            Object evalResult = expr.evaluate(ctx);
-                                            processed = evalResult != null ? evalResult.toString() : completion.trim();
-                                        } catch (Exception e) {
-                                            processed = completion.trim();
-                                        }
-                                    } else {
-                                        processed = completion.trim();
-                                    }
+                                List<VariableResult> variableResults = JSON.parseArray(result, VariableResult.class);
+                                for (VariableResult variableResult : variableResults) {
                                     try {
-                                        String finalProcessed = processed;
+                                        String finalProcessed = variableResult.getVariable();
                                         resultSet.addElement(
-                                                LookupElementBuilder.create(processed)
-                                                        .withPresentableText(processed)
+                                                LookupElementBuilder.create(finalProcessed)
+                                                        .withPresentableText(finalProcessed)
+                                                        .withIcon(IconLoader.getIcon("/pluginIcon.svg", AiIntelligentVarCompletionContributor.class))
                                                         .withLookupString(text)
-                                                        .withTypeText("renamify")
+                                                        .withTypeText(String.format("Renamify:%s", variableResult.getReason()))
                                                         .withInsertHandler((insertionContext, item) -> {
                                                             int startOffset = insertionContext.getStartOffset();
                                                             int tailOffset = insertionContext.getTailOffset();
                                                             insertionContext.getDocument().replaceString(startOffset, tailOffset, finalProcessed);
                                                         })
                                         );
-                                    } catch (Exception ignore) {
+                                    } catch (Exception e) {
+                                        log.error("AI补全请求异常", e);
                                     }
                                 }
                                 resultSet.restartCompletionOnAnyPrefixChange();
