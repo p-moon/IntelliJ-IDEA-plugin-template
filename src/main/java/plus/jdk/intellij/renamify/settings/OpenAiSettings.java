@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 @State(
         name = "OpenAiSettings",
-        storages = {@Storage("OpenAiSettings.xml")}
+        storages = {@Storage("OpenAiSettings-1.0.2.xml")}
 )
 public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.State> {
     @Data
