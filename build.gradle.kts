@@ -23,6 +23,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.12")
     implementation("dev.langchain4j:langchain4j-open-ai:1.8.0")
     implementation("dev.langchain4j:langchain4j:1.8.0")
+    implementation("org.apache.commons:commons-jexl3:3.3")
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
     testCompileOnly("org.projectlombok:lombok:1.18.42")

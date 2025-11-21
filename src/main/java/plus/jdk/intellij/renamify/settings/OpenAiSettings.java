@@ -33,6 +33,12 @@ public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.S
 
 只输出变量名，不要解释。
 """;
+        /**
+         * 用于对AI输出结果做二次处理的JEXL脚本
+         * 例如：return res.trim();
+         * 可访问变量：res（AI原始输出）
+         */
+        private String outputJexlScript = "completion.trim()";
     }
 
     private State state = new State();

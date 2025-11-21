@@ -23,6 +23,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
     private JTextField temperatureField;
     private JTextField maxTokensField;
     private JTextArea promptField;
+    private JTextArea outputJexlScriptField;
 
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
@@ -47,6 +48,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             temperatureField = createStyledField(fieldFont);
             maxTokensField = createStyledField(fieldFont);
             promptField = createStyledArea(fieldFont);
+            outputJexlScriptField = createStyledArea(fieldFont);
 
             int row = 0;
             gbc.gridx = 0; gbc.gridy = row;
@@ -98,6 +100,17 @@ public class OpenAiSettingsConfigurable implements Configurable {
             gbc.anchor = GridBagConstraints.CENTER;
             // 改为无滚动条、紧凑边框的多行输入框
             promptField.setPreferredSize(new Dimension(0, 36));
+
+            row++;
+            gbc.gridx = 0; gbc.gridy = row;
+            gbc.weightx = 0.3;
+            gbc.anchor = GridBagConstraints.NORTHEAST;
+            panel.add(createLabel("输出处理JEXL脚本:", labelFont), gbc);
+            gbc.gridx = 1;
+            gbc.weightx = 0.7;
+            gbc.anchor = GridBagConstraints.CENTER;
+            outputJexlScriptField.setPreferredSize(new Dimension(0, 36));
+            panel.add(outputJexlScriptField, gbc);
             panel.add(promptField, gbc);
 
             loadSettings();
@@ -163,6 +176,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
         temperatureField.setText(String.valueOf(state.getTemperature()));
         maxTokensField.setText(String.valueOf(state.getMaxTokens()));
         promptField.setText(state.getPrompt());
+        outputJexlScriptField.setText(state.getOutputJexlScript());
     }
 
     @Override
@@ -191,6 +205,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             state.maxTokens = 200;
         }
         state.setPrompt(promptField.getText());
+        state.setOutputJexlScript(outputJexlScriptField.getText());
         // 强制保存设置，确保输入配置落盘
         ApplicationManager.getApplication().saveSettings();
     }

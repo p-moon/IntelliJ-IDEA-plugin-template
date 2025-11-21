@@ -16,6 +16,10 @@ import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatRequestParameters;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.jexl3.JexlBuilder;
+import org.apache.commons.jexl3.JexlEngine;
+import org.apache.commons.jexl3.JexlExpression;
+import org.apache.commons.jexl3.MapContext;
 import org.jetbrains.annotations.NotNull;
 import plus.jdk.intellij.renamify.settings.OpenAiSettings;
 
@@ -24,6 +28,9 @@ import java.util.HashMap;
 
 @Slf4j
 public class AiIntelligentVarCompletionContributor extends CompletionContributor {
+
+    // JEXL 脚本处理
+    JexlEngine jexl = new JexlBuilder().create();
 
     /**
      * 用于存储和管理与OpenAI的聊天模型实例的交互
@@ -65,18 +72,33 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                                 ChatResponse chatResponse = chatModel.chat(chatRequest);
                                 String result = chatResponse.aiMessage().text();
                                 log.info("获取到了AI 的返回结果，results: {}", chatResponse);
-                                for (String res : result.split(",")) {
-                                    String trimmed = fixResult(res.trim());
+                                String outputJexlScript = aiConfig.getOutputJexlScript();
+                                for (String completion : result.split(",")) {
+                                    String processed = null;
+                                    if (outputJexlScript != null && !outputJexlScript.trim().isEmpty()) {
+                                        try {
+                                            JexlExpression expr = jexl.createExpression(outputJexlScript);
+                                            MapContext ctx = new MapContext();
+                                            ctx.set("completion", completion);
+                                            Object evalResult = expr.evaluate(ctx);
+                                            processed = evalResult != null ? evalResult.toString() : completion.trim();
+                                        } catch (Exception e) {
+                                            processed = completion.trim();
+                                        }
+                                    } else {
+                                        processed = completion.trim();
+                                    }
                                     try {
+                                        String finalProcessed = processed;
                                         resultSet.addElement(
-                                                LookupElementBuilder.create(trimmed)
-                                                        .withPresentableText(trimmed)
+                                                LookupElementBuilder.create(processed)
+                                                        .withPresentableText(processed)
                                                         .withLookupString(text)
                                                         .withTypeText("renamify")
                                                         .withInsertHandler((insertionContext, item) -> {
                                                             int startOffset = insertionContext.getStartOffset();
                                                             int tailOffset = insertionContext.getTailOffset();
-                                                            insertionContext.getDocument().replaceString(startOffset, tailOffset, trimmed);
+                                                            insertionContext.getDocument().replaceString(startOffset, tailOffset, finalProcessed);
                                                         })
                                         );
                                     } catch (Exception ignore) {
@@ -91,38 +113,6 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                 });
     }
 
-    /**
-     * 按照“-”或空格分割字符串，并将各部分首字母大写拼接。
-     * 例如：abc-def -> AbcDef，abc def -> AbcDef
-     */
-    public static String fixResult(String input) {
-        if (input == null || input.isEmpty()) {
-            return input;
-        }
-        String[] parts;
-        if (input.contains("-")) {
-            parts = input.split("-");
-        } else if(input.contains("_")) {
-            parts = input.split("_");
-        }else {
-            parts = input.split("\\s+");
-        }
-        StringBuilder sb = new StringBuilder();
-        for (String part : parts) {
-            if (part.isEmpty()) continue;
-            if (part.length() == 1) {
-                sb.append(part.toUpperCase());
-            } else {
-                sb.append(Character.toUpperCase(part.charAt(0)))
-                        .append(part.substring(1).toLowerCase());
-            }
-        }
-        String result = sb.toString();
-        if(result.length() == 1) {
-            return result;
-        }
-        return Character.toLowerCase(result.charAt(0)) + result.substring(1);
-    }
 
 
     // 判断字符串是否为中文
