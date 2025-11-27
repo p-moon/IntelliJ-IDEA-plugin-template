@@ -5,16 +5,13 @@
 
     <!-- Unique id for this plugin. Must stay constant for the life of the plugin. -->
     <id>plus.jdk.renamify</id>
-    <idea-version since-build="241.0" until-build="241.*"/>
+    <idea-version since-build="241.0" until-build="999.*"/>
 
     <!-- Text to display as name on Settings | Plugin page -->
     <name>renamify</name>
 
     <!-- Product and plugin compatibility requirements -->
-    <depends>com.intellij.java</depends>
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.java</depends>
-    <depends>com.intellij.java</depends>
 
     <!-- Text to display as description on Settings | Plugin page -->
     <description>
