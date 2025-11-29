@@ -52,7 +52,7 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
 
         // 优化：Pattern 直接匹配 PsiIdentifier，触发更自然
         extend(CompletionType.BASIC,
-                PlatformPatterns.psiElement(PsiIdentifier.class),
+                PlatformPatterns.psiElement(),
                 new CompletionProvider<>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters parameters,
