@@ -2,7 +2,6 @@ package plus.jdk.intellij.renamify.settings;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.List;
 
 public class OpenAiSettingsConfigurable implements Configurable {
@@ -26,6 +27,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
     private JTextField temperatureField;
     private JTextField maxTokensField;
     private JTextArea promptField;
+    private JScrollPane promptScrollPane;
     private JTable fileSuffixBlackListTable;
     private DefaultTableModel tableModel;
 
@@ -117,12 +119,44 @@ public class OpenAiSettingsConfigurable implements Configurable {
             gbc.fill = GridBagConstraints.BOTH;
             gbc.anchor = GridBagConstraints.CENTER;
 
-            JScrollPane promptScrollPane = new JBScrollPane(promptField,
+            promptScrollPane = new JScrollPane(promptField,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             promptScrollPane.setPreferredSize(new Dimension(0, 120));
             promptScrollPane.setBorder(promptField.getBorder());
             promptField.setBorder(null);
+            
+            // 添加焦点监听器以实现选中时放大输入框
+            promptField.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    promptScrollPane.setPreferredSize(new Dimension(0, 240));
+                    promptScrollPane.setMinimumSize(new Dimension(0, 240));
+                    promptScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 240));
+                    
+                    // 立即更新布局
+                    contentPanel.revalidate();
+                    SwingUtilities.invokeLater(() -> {
+                        mainPanel.revalidate();
+                        mainPanel.repaint();
+                    });
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    promptScrollPane.setPreferredSize(new Dimension(0, 120));
+                    promptScrollPane.setMinimumSize(new Dimension(0, 120));
+                    promptScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+                    
+                    // 立即更新布局
+                    contentPanel.revalidate();
+                    SwingUtilities.invokeLater(() -> {
+                        mainPanel.revalidate();
+                        mainPanel.repaint();
+                    });
+                }
+            });
+            
             contentPanel.add(promptScrollPane, gbc);
 
             // 添加文件后缀黑名单部分

@@ -22,7 +22,7 @@ public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.S
         public double temperature = 0.7;
         public int maxTokens = 100;
         public String apiKey = "";
-        public List<String> fileSuffixBlackList = new ArrayList<>();
+        public List<String> fileSuffixBlackList = new ArrayList<>(List.of(".md", ".markdown"));
         private String prompt =
 """
 给定一个中文变量名"％s"，请为我生成对应的变量名以及中文变量说明，要求如下：
