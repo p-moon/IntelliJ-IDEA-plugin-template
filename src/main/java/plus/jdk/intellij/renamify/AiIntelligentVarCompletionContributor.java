@@ -4,7 +4,10 @@ import com.alibaba.fastjson2.JSON;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.PlatformPatterns;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.util.ProcessingContext;
 import dev.langchain4j.data.message.UserMessage;
@@ -58,6 +61,11 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                     protected void addCompletions(@NotNull CompletionParameters parameters,
                                                   @NotNull ProcessingContext context,
                                                   @NotNull CompletionResultSet resultSet) {
+                        // 检查文件后缀是否在黑名单中
+                        if (isFileInBlackList(parameters)) {
+                            return; // 如果在黑名单中，则直接返回，不执行补全逻辑
+                        }
+                        
                         com.intellij.psi.PsiElement element = parameters.getPosition();
                         String text = element.getText().replace("IntellijIdeaRulezzz", "");
                         if (isChinese(text)) {
@@ -108,7 +116,47 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                 });
     }
 
-
+    /**
+     * 检查当前文件是否在黑名单中
+     *
+     * @param parameters 补全参数
+     * @return 如果文件在黑名单中返回true，否则返回false
+     */
+    private boolean isFileInBlackList(CompletionParameters parameters) {
+        try {
+            PsiElement element = parameters.getPosition();
+            PsiFile psiFile = element.getContainingFile();
+            if (psiFile == null) {
+                return false;
+            }
+            
+            VirtualFile virtualFile = psiFile.getVirtualFile();
+            if (virtualFile == null) {
+                return false;
+            }
+            
+            String fileName = virtualFile.getName();
+            OpenAiSettings settings = OpenAiSettings.getInstance();
+            if (settings == null || settings.getState() == null) {
+                return false;
+            }
+            
+            List<String> blackList = settings.getState().getFileSuffixBlackList();
+            if (blackList == null || blackList.isEmpty()) {
+                return false;
+            }
+            
+            for (String suffix : blackList) {
+                if (fileName.endsWith(suffix)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            log.warn("检查文件黑名单时出错", e);
+        }
+        
+        return false;
+    }
 
     // 判断字符串是否为中文
     private boolean isChinese(String text) {

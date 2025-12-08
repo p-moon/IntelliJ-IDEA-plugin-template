@@ -7,6 +7,9 @@ import com.intellij.openapi.components.Storage;
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @State(
         name = "OpenAiSettings",
         storages = {@Storage("OpenAiSettings-1.0.2.xml")}
@@ -19,9 +22,10 @@ public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.S
         public double temperature = 0.7;
         public int maxTokens = 100;
         public String apiKey = "";
+        public List<String> fileSuffixBlackList = new ArrayList<>();
         private String prompt =
 """
-给定一个中文变量名“%s”，请为我生成对应的变量名以及中文变量说明，要求如下：
+给定一个中文变量名"％s"，请为我生成对应的变量名以及中文变量说明，要求如下：
 
 先理解变量语义，抓住核心含义，而不是逐字直译。
 
