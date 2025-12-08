@@ -6,7 +6,7 @@
     <!-- Unique id for this plugin. Must stay constant for the life of the plugin. -->
     <id>plus.jdk.renamify</id>
     <version>1.0.5</version>
-    <idea-version since-build="241.0" until-build="999.*"/>
+    <idea-version since-build="233.0" until-build="999.*"/>
 
     <!-- Text to display as name on Settings | Plugin page -->
     <name>renamify</name>
