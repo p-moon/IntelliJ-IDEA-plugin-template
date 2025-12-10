@@ -73,7 +73,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             gbc.gridx = 0;
             gbc.gridy = row;
             gbc.weightx = 0.3;
-            contentPanel.add(createLabel("模型名称:", labelFont), gbc);
+            contentPanel.add(createLabel("Model Name:", labelFont), gbc);
             gbc.gridx = 1;
             gbc.weightx = 0.7;
             contentPanel.add(modelNameField, gbc);
@@ -100,7 +100,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             gbc.gridx = 0;
             gbc.gridy = row;
             gbc.weightx = 0.3;
-            contentPanel.add(createLabel("最大 token 数量:", labelFont), gbc);
+            contentPanel.add(createLabel("Max Token:", labelFont), gbc);
             gbc.gridx = 1;
             gbc.weightx = 0.7;
             contentPanel.add(maxTokensField, gbc);
@@ -111,7 +111,7 @@ public class OpenAiSettingsConfigurable implements Configurable {
             gbc.weightx = 0.3;
             gbc.weighty = 0;
             gbc.anchor = GridBagConstraints.NORTHEAST;
-            contentPanel.add(createLabel("提示词:", labelFont), gbc);
+            contentPanel.add(createLabel("Prompt:", labelFont), gbc);
 
             gbc.gridx = 1;
             gbc.weightx = 0.7;

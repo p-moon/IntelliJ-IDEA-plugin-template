@@ -25,7 +25,7 @@ public class OpenAiSettings implements PersistentStateComponent<OpenAiSettings.S
         public List<String> fileSuffixBlackList = new ArrayList<>(List.of(".md", ".markdown"));
         private String prompt =
 """
-给定一个中文变量名"％s"，请为我生成对应的变量名以及中文变量说明，要求如下：
+给定一个中文变量名"${INPUT}"，请为我生成对应的变量名以及中文变量说明，要求如下：
 
 先理解变量语义，抓住核心含义，而不是逐字直译。
 

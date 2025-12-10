@@ -69,7 +69,7 @@ public class AiIntelligentVarCompletionContributor extends CompletionContributor
                         com.intellij.psi.PsiElement element = parameters.getPosition();
                         String text = element.getText().replace("IntellijIdeaRulezzz", "");
                         if (isChinese(text)) {
-                            String prompt = String.format(aiConfig.getPrompt(), text);
+                            String prompt = aiConfig.getPrompt().replace("${INPUT}",  text);
                             ChatRequest chatRequest = ChatRequest.builder()
                                     .parameters(
                                              new OpenAiChatRequestParameters.Builder()
