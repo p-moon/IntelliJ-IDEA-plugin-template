@@ -20,7 +20,7 @@
 
 你可以通过如下地址下载这个插件的安装包：
 
-- [renamify 插件下载](https://joyspace.jd.com/pages/XSnduyt9whBh9My5jDrN)
+- [renamify 插件下载](https://plugins.jetbrains.com/plugin/29047-renamify/edit/versions)
 
 然后通过如下方式来安装使用：
 
